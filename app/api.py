@@ -16,21 +16,11 @@ engine = create_engine('sqlite://salaries.db')
 app = Flask(__name__)
 api = Api(app)
 
-class HelloWorld(Resource):
+class Departments(Resource):
     def get(self):
-        return {'hello': 'world'}
-
-api.add_resource(HelloWorld, '/')
-
-
-
-class ToDoSimple(Resource):
-    def get(self):
-        return { todo_id: todos[todo_id] }
-    def put(self):
-        todos[todo_id] = request.form['data']
-        return { todo_id: todos[todo_id] }
-api.add_resource(ToDoSimple, '/<string:todo_id>')
+        # Connect to database
+        connect = engine.connect
+        
 
 
 if __name__ == '__main__':
