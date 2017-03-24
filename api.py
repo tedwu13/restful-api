@@ -16,25 +16,44 @@ e = create_engine('sqlite:///salaries.db')
 app = Flask(__name__)
 api = Api(app)
 
-class Departments_Meta(Resource):
+class Departments(Resource):
     def get(self):
-        #Connect to databse
+        #Connect to database
         conn = e.connect()
         #Perform query and return JSON data
-        query = conn.execute("select distinct DEPARTMENT from salaries")
+        query = conn.execute("SELECT DISTINCT DEPARTMENT from salaries")
         return {'departments': [i[0] for i in query.cursor.fetchall()]}
+
+class Positions(Resource):
+    def get(self):
+        #Connect to database
+        conn = e.connect()
+        #Perform query and return JSON data
+        query = conn.execute("SELECT DISTINCT [Position Title] from salaries")
+        print query
+        return {'positions': [i[0] for i in query.cursor.fetchall()]}
+
+class Names(Resource):
+    def get(self):
+        #Connect to a database
+        conn = e.connect()
+        query = conn.execute("SELECT DISTINCT Name from salaries")
+        return {'names': [i[0] for i in query.cursor.fetchall()]}
 
 class Departmental_Salary(Resource):
     def get(self, department_name):
         conn = e.connect()
-        query = conn.execute("select * from salaries where Department='%s'"%department_name.upper())
-        #Query the result and get cursor.Dumping that data to a JSON is looked by extension
+        department_name = department_name.upper()
+        query = conn.execute("SELECT * from salaries where Department='%s'"%department_name)
+        #Query the result and get cursor.
+        #Dumping that data to a JSON is looked by extension
         result = {'data': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
         return result
         #We can have PUT,DELETE,POST here. But in our API GET implementation is sufficient
  
 api.add_resource(Departmental_Salary, '/dept/<string:department_name>')
-api.add_resource(Departments_Meta, '/departments')
-
+api.add_resource(Departments, '/departments')
+api.add_resource(Names, '/names')
+api.add_resource(Positions, '/positions')
 if __name__ == '__main__':
      app.run()
