@@ -20,3 +20,12 @@ c.execute('''
           )
           ''')
 
+# # Python's SQLAlchemy and Declarative
+
+# # There are three most important components in writing SQLAlchemy code:
+
+# A Table that represents a table in a database.
+# A mapper that maps a Python class to a table in a database.
+# A class object that defines how a database record maps to a normal Python object.
+# Instead of having to write code for Table, mapper and the class object at different places, SQLAlchemy's declarative allows a Table, a mapper and a class object to be defined at once in one class definition.
+

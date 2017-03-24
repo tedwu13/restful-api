@@ -20,7 +20,8 @@ class Departments(Resource):
     def get(self):
         # Connect to database
         connect = engine.connect
-        
+        # Perform the query and return JSON data
+        # query = connect.execute("SELECT ")
 
 
 if __name__ == '__main__':
