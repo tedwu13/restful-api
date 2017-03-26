@@ -23,6 +23,10 @@ class Departments(Resource):
         #Perform query and return JSON data
         query = conn.execute("SELECT DISTINCT DEPARTMENT from salaries")
         return {'departments': [i[0] for i in query.cursor.fetchall()]}
+    
+    def post(self):
+        conn = e.connect()
+
 
 class Positions(Resource):
     def get(self):
@@ -51,24 +55,25 @@ class Salary(Resource):
         return result
         #We can have PUT,DELETE,POST here. But in our API GET implementation is sufficient
 
-class Employee(Resource):
-    def post(self):
+# class Employee(Resource):
+#     def post(self):
 
-        parser = reqparse.RequestParser()
+#         parser = reqparse.RequestParser()
 
-        parser.add_argument('name', type=str, required=True, location='json')
-        parser.add_argument('department', type=str, required=True, location='json')
-        parser.add_argument('position', type=str, required=True, location='json')
-        parser.add_argument('salary', type=str, required=True, location='json')
+#         parser.add_argument('name', type=str, required=True, location='json')
+#         parser.add_argument('department', type=str, required=True, location='json')
+#         parser.add_argument('position', type=str, required=True, location='json')
+#         parser.add_argument('salary', type=str, required=True, location='json')
         
-        args = parser.parse_args(strict=True) 
+#         args = parser.parse_args(strict=True) 
 
-        employee = {
-            'name': args['name'],
-            'department': args['department'],
-            'position': args['position'],
-            'salary': args['salary'],
-        }
+#         employee = {
+#             'name': args['name'],
+#             'department': args['department'],
+#             'position': args['position'],
+#             'salary': args['salary'],
+#         }
+
 
  
 api.add_resource(Salary, '/dept/<string:department_name>')
