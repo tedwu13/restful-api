@@ -1,5 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
+from flask_restful import reqparse
+
 from sqlalchemy import create_engine
 
 from json import dumps
@@ -21,11 +23,12 @@ class Departments(Resource):
         #Connect to database
         conn = e.connect()
         #Perform query and return JSON data
-        query = conn.execute("SELECT DISTINCT DEPARTMENT from salaries")
+        query = conn.execute("SELECT DISTINCT Department from salaries")
         return {'departments': [i[0] for i in query.cursor.fetchall()]}
     
     def post(self):
         conn = e.connect()
+
 
 
 class Positions(Resource):
@@ -55,30 +58,46 @@ class Salary(Resource):
         return result
         #We can have PUT,DELETE,POST here. But in our API GET implementation is sufficient
 
-# class Employee(Resource):
-#     def post(self):
+class Employee(Resource):
+    def get(self):
+        conn = e.connect()
+        query = conn.execute("SELECT NAME, [Position Title], Department, [Employee Annual Salary] from salaries")
 
-#         parser = reqparse.RequestParser()
+        result = { 'employee': [i for i in query.cursor.fetchall()]}
+        return result
 
-#         parser.add_argument('name', type=str, required=True, location='json')
-#         parser.add_argument('department', type=str, required=True, location='json')
-#         parser.add_argument('position', type=str, required=True, location='json')
-#         parser.add_argument('salary', type=str, required=True, location='json')
+    def post(self):
+
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('name', type=str, required=True, location='json')
+        parser.add_argument('department', type=str, required=True, location='json')
+        parser.add_argument('position', type=str, required=True, location='json')
+        parser.add_argument('salary', type=str, required=True, location='json')
         
-#         args = parser.parse_args(strict=True) 
+        args = parser.parse_args(strict=True) 
 
-#         employee = {
-#             'name': args['name'],
-#             'department': args['department'],
-#             'position': args['position'],
-#             'salary': args['salary'],
-#         }
+        employee = {
+            'name': args['name'],
+            'department': args['department'],
+            'position': args['position'],
+            'salary': args['salary'],
+        }
 
+        print employee
 
- 
+        conn = e.connect()
+        conn.execute("INSERT INTO EMPLOYEES (NAME, DEPARTMENT, POSITION, SALARY)")
+        conn.execute("employee.name, employee.department, employee.position, employee.salary")
+
+        # curl -i -X -H "Content-Type: application/json" POST -d '{"name":"TED WU","department":"TECHNOLOGY", "position":"SOFTWARE ENGINEER", "salary": "$100000"}' http://127.0.0.1:5000/employees
+
 api.add_resource(Salary, '/dept/<string:department_name>')
 api.add_resource(Departments, '/departments')
 api.add_resource(Names, '/names')
 api.add_resource(Positions, '/positions')
+api.add_resource(Employee, '/employees')
+
+
 if __name__ == '__main__':
      app.run()
