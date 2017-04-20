@@ -54,7 +54,7 @@ def home():
 #POST /store data : {name:}
 @app.route('/store', methods=['POST']) #http://localhost:5000/store/some_name
 #some_name has to be the same as the argument
-def create_store(some_name):
+def create_store():
     request_data = request.get_json()
     new_store = {
         'name': request_data['name'],
@@ -100,7 +100,7 @@ def create_item_in_store(name):
 
 @app.route('/store/<string:name>/item')
 def get_items_in_store(name):
-        for store in stores:
+    for store in stores:
         if store['name'] == name:
             return jsonify({ 'items': store['items']})
     return jsonify({ 'message': 'store not found'})
