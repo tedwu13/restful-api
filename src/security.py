@@ -2,8 +2,8 @@ from werkzeug.security import safe_str_cmp # for string comparision just to make
 from user import User
 
 users = [
-    User(1, 'user1', 'abcxyz'),
-    User(2, 'user2', 'abcxyz'),
+    User(1, 'user1', '123'),
+    User(2, 'user2', '123'),
     User(3, 'user3', '123'),
 ]
 
@@ -14,7 +14,7 @@ userid_table = {u.id: u for u in users}
 
 def authenticate(username, password):
     user = username_table.get(username, None)
-    if user and safe_str_cmp(user.password, password):
+    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
         return user
 
 
