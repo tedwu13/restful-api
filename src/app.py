@@ -46,7 +46,7 @@ class Item(Resource):
         data = Item.parser.parse_args()
         # Once again, print something not in the args to verify everything works
         item = next(filter(lambda x: x['name'] == name, items), None)
-        if item is None:
+        if item is None: #if item is none, then create one 
             item = {'name': name, 'price': data['price']}
             items.append(item)
         else:
